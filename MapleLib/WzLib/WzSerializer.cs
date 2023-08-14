@@ -241,7 +241,7 @@ namespace MapleLib.WzLib.Serialization
         /// <param name="depth"></param>
         /// <param name="prop"></param>
         /// <param name="exportFilePath"></param>
-        protected void WritePropertyToJsonBson(JObject json, string depth, WzImageProperty prop, string exportFilePath,string propertyUOLValue = null)
+        protected void WritePropertyToJsonBson(JObject json, string depth, WzObject prop, string exportFilePath,string propertyUOLValue = null)
         {
             const string FIELD_TYPE_NAME = "_dirType"; // avoid the same naming as anything in the WZ to avoid exceptions
             //const string FIELD_DEPTH_NAME = "_depth";
@@ -442,7 +442,7 @@ namespace MapleLib.WzLib.Serialization
             {
                 if (true)
                 {
-                    WritePropertyToJsonBson(json, depth, prop, exportFilePath, propertyUOL.Value);
+                    WritePropertyToJsonBson(json, depth, propertyUOL.LinkValue, exportFilePath, propertyUOL.Value);
                 }
                 else
                 {
