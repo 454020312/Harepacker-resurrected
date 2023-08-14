@@ -537,6 +537,9 @@ namespace MapleLib.WzLib.WzProperties
             catch (InvalidDataException)
             {
             }
+            catch (EndOfStreamException)
+            {
+            }
             return null;
         }
 
