@@ -241,7 +241,7 @@ namespace MapleLib.WzLib.Serialization
         /// <param name="depth"></param>
         /// <param name="prop"></param>
         /// <param name="exportFilePath"></param>
-        protected void WritePropertyToJsonBson(JObject json, string depth, WzImageProperty prop, string exportFilePath)
+        protected void WritePropertyToJsonBson(JObject json, string depth, WzImageProperty prop, string exportFilePath,string propertyUOLValue = null)
         {
             const string FIELD_TYPE_NAME = "_dirType"; // avoid the same naming as anything in the WZ to avoid exceptions
             //const string FIELD_DEPTH_NAME = "_depth";
@@ -272,6 +272,11 @@ namespace MapleLib.WzLib.Serialization
                     };
                 if (bExportBase64Data)
                 {
+                    if(propertyUOLValue != null)
+                    {
+                        jsonCanvas.Add("_image_uol", propertyUOLValue);
+                    }
+
                     byte[] pngbytes;
                     using (MemoryStream stream = new MemoryStream())
                     {
@@ -435,7 +440,13 @@ namespace MapleLib.WzLib.Serialization
             }
             else if (prop is WzUOLProperty propertyUOL)
             {
-                JObject jsonUOL = new JObject
+                if (true)
+                {
+                    WritePropertyToJsonBson(json, depth, prop, exportFilePath, propertyUOL.Value);
+                }
+                else
+                {
+                    JObject jsonUOL = new JObject
                     {
                         //{ FIELD_DEPTH_NAME, depth },
                         { FIELD_NAME_NAME, XmlUtil.SanitizeText(propertyUOL.Name) },
@@ -443,10 +454,11 @@ namespace MapleLib.WzLib.Serialization
                         { FIELD_VALUE_NAME, propertyUOL.Value},
                     };
 
-                string jPropertyName = XmlUtil.SanitizeText(propertyUOL.Name);
-                if (!json.ContainsKey(jPropertyName)) // making the assumption that only the first wz image will be used, everything is dropped since its not going to be read in wz anyway
-                {
-                    json.Add(new JProperty(XmlUtil.SanitizeText(propertyUOL.Name), jsonUOL)); // add this json to the main json object parent
+                    string jPropertyName = XmlUtil.SanitizeText(propertyUOL.Name);
+                    if (!json.ContainsKey(jPropertyName)) // making the assumption that only the first wz image will be used, everything is dropped since its not going to be read in wz anyway
+                    {
+                        json.Add(new JProperty(XmlUtil.SanitizeText(propertyUOL.Name), jsonUOL)); // add this json to the main json object parent
+                    }
                 }
             }
             else if (prop is WzVectorProperty propertyVector)
